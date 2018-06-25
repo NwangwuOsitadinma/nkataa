@@ -21,7 +21,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost:27017/nkataa', { useMongoClient: true });
+mongoose.connect('mongodb://localhost:27017/nkataa');
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
