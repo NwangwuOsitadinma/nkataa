@@ -1,10 +1,9 @@
 var model = require('../models/Post');
 
 exports.createPost = function(req, res){
-    var time = new Date;
     var data = {
-        time: time.toLocaleTimeString(),
-        postBody: req.body.postbody,
+        time: Date.now(),
+        postBody: req.body.postBody,
         user: req.body.user,
         comments: [],
     }
@@ -27,5 +26,25 @@ exports.deletePost = function(req, res){
     model.remove(options, function(err){
         if (err) res.json({err:err, message:'an error occurred while deleting'});
         res.json({message: 'post deleted'});
+    });
+}
+
+exports.editPost = function(req, res){
+    var id = req.body.id;
+    model.findById(id, function(err, post){
+        if (err) res.json({err:err, message:'sorry, an error occurred'});
+        if (req.body.postBody) post.postBody = req.body.postBody;
+        user.save(function (err, updatedPost){
+            if (err) res.json({err:err, message:'sorry an error occurred'});
+            res.json(updatedPost);
+        });
+    });
+}
+
+exports.viewPostsByUser = function(req, res){
+    var userId = req.body.userId;
+    model.find({user:userId}, 'postBody', function(err, data){
+        if (err) res.json({err:err, message:'sorry, something went wrong while searching'});
+        res.json({message: data});
     });
 }
