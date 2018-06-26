@@ -53,13 +53,16 @@ exports.getUserByParam = function(req, res){
     }
 }
 exports.updateUser = function(req, res){
-    //update(id, name, Ibesoft);
-    //update(id, all, {name:Ibe, password:kk, email:jj@kk.com})
-    var id = req.params.id;
-    var column = req.params.column;
-    var value = req.params.value;
-    model.findByIdAndUpdate(id, {column: value}, function(err, data){
+    var id = req.body.id;
+    var record = req.body;
+    model.findById(id, function(err, user){
         if (err) res.json({err:err, message:'sorry, an error occurred'});
-        res.json({message:`User record with ID:${id} has been updated successfully.\n${data}`});
+        if (record.name) user.name = record.name;
+        if (record.email) user.email = record.email;
+        if (record.password) user.password = record.password;
+        user.save(function (err, updatedUser){
+            if (err) res.json({err:err, message:'sorry an error occurred'});
+            res.json(updatedUser);
+        });
     });
 }
