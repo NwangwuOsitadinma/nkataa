@@ -29,20 +29,23 @@ exports.getUserByParam = function(req, res){
     var value = req.params.value;
     switch (key){
         case 'id':
-            model.findById(value, function(err, data){
+            model.findById(value, 'name email', function(err, data){
                 if (err) res.json({err:err, message:'sorry, something went wrong while searching'});
                 res.json({message: data});
             });
+            break;
         case 'email':
-            model.findOne({email: value}, function(err, data){
+            model.findOne({email: value},'name email', function(err, data){
                 if (err) res.json({err:err, message:'sorry, something went wrong while searching'});
                 res.json({message: data});
             });
+            break;
         case 'name':
-            model.find({name: `/${value}/i`}, 'name', function(err, data){
+            model.find({name:value}, 'name email', function(err, data){
                 if (err) res.json({err:err, message:'sorry, something went wrong while searching'});
                 res.json({message: data});
             });
+            break;
         default:
             res.json('invalid paramaters specified');
     }
