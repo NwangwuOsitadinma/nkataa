@@ -24,3 +24,26 @@ exports.deleteUser = function(req, res){
         res.json({message: 'user deleted'});
     });
 }
+exports.getUserByParam = function(req, res){
+    var key = req.params.key;
+    var value = req.params.value;
+    switch (key){
+        case 'id':
+            model.findById(value, function(err, data){
+                if (err) res.json({err:err, message:'sorry, something went wrong while searching'});
+                res.json({message: data});
+            });
+        case 'email':
+            model.findOne({email: value}, function(err, data){
+                if (err) res.json({err:err, message:'sorry, something went wrong while searching'});
+                res.json({message: data});
+            });
+        case 'name':
+            model.find({name: `/${value}/i`}, 'name', function(err, data){
+                if (err) res.json({err:err, message:'sorry, something went wrong while searching'});
+                res.json({message: data});
+            });
+        default:
+            res.json('invalid paramaters specified');
+    }
+}
