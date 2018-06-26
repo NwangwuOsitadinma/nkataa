@@ -20,6 +20,7 @@ exports.getUsers = function (req, res){
 exports.deleteUser = function(req, res){
     var options = {_id: req.params.id};
     model.remove(options, function(err){
+
         if (err) res.json({err:err, message:'an error occurred while deleting'});
         res.json({message: 'user deleted'});
     });
@@ -27,21 +28,22 @@ exports.deleteUser = function(req, res){
 exports.getUserByParam = function(req, res){
     var key = req.params.key;
     var value = req.params.value;
+    let columns = 'name email';
     switch (key){
         case 'id':
-            model.findById(value, 'name email', function(err, data){
+            model.findById(value, columns, function(err, data){
                 if (err) res.json({err:err, message:'sorry, something went wrong while searching'});
                 res.json({message: data});
             });
             break;
         case 'email':
-            model.findOne({email: value},'name email', function(err, data){
+            model.findOne({email: value}, columns, function(err, data){
                 if (err) res.json({err:err, message:'sorry, something went wrong while searching'});
                 res.json({message: data});
             });
             break;
         case 'name':
-            model.find({name:value}, 'name email', function(err, data){
+            model.find({name:value}, columns, function(err, data){
                 if (err) res.json({err:err, message:'sorry, something went wrong while searching'});
                 res.json({message: data});
             });
@@ -49,4 +51,15 @@ exports.getUserByParam = function(req, res){
         default:
             res.json('invalid paramaters specified');
     }
+}
+exports.updateUser = function(req, res){
+    //update(id, name, Ibesoft);
+    //update(id, all, {name:Ibe, password:kk, email:jj@kk.com})
+    var id = req.params.id;
+    var column = req.params.column;
+    var value = req.params.value;
+    model.findByIdAndUpdate(id, {column: value}, function(err, data){
+        if (err) res.json({err:err, message:'sorry, an error occurred'});
+        res.json({message:`User record with ID:${id} has been updated successfully.\n${data}`});
+    });
 }
