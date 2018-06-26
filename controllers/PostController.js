@@ -34,7 +34,7 @@ exports.editPost = function(req, res){
     model.findById(id, function(err, post){
         if (err) res.json({err:err, message:'sorry, an error occurred'});
         if (req.body.postBody) post.postBody = req.body.postBody;
-        user.save(function (err, updatedPost){
+        post.save(function (err, updatedPost){
             if (err) res.json({err:err, message:'sorry an error occurred'});
             res.json(updatedPost);
         });
@@ -42,7 +42,7 @@ exports.editPost = function(req, res){
 }
 
 exports.viewPostsByUser = function(req, res){
-    var userId = req.body.userId;
+    var userId = req.params.userId;
     model.find({user:userId}, 'postBody', function(err, data){
         if (err) res.json({err:err, message:'sorry, something went wrong while searching'});
         res.json({message: data});
