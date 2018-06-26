@@ -1,10 +1,9 @@
 var model = require('../models/Comments');
 
 exports.addComment = function(req, res){
-    var time = new Date;
     var data = {
-        time: time.toLocaleTimeString(),
-        commentBody: req.body.postbody,
+        time: Date.now(),
+        commentBody: req.body.commentBody,
         user: req.body.user,
         post: req.body.post,
     }
@@ -15,9 +14,17 @@ exports.addComment = function(req, res){
 }
 
 exports.viewComments = function(req, res){
-    var post = req.body.post;
+    var post = req.params.post;
     model.find({post:post}, 'commentBody', function(err, data){
-        if (err) res.json({err:err, message:'sorry, something went wrong while searching'});
+        if (err) res.json({err:err, message:'sorry, something went wrong while retrieving'});
         res.json({message: data});
+    });
+}
+
+exports.deleteComment = function(req, res){
+    var options = {_id: req.params.id};
+    model.remove(options, function(err){
+        if (err) res.json({err:err, message:'an error occurred while deleting'});
+        res.json({message: 'comment deleted'});
     });
 }
