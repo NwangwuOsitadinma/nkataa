@@ -42,8 +42,8 @@ exports.editPost = function(req, res){
 }
 
 exports.viewPostsByUser = function(req, res){
-    var userId = req.params.userId;
-    model.find({user:userId}, 'postBody', function(err, data){
+    var user = req.params.userId;
+    model.find({user:user}, 'postBody', function(err, data){
         if (err) res.json({err:err, message:'sorry, something went wrong while searching'});
         res.json({message: data});
     });
