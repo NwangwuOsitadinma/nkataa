@@ -28,3 +28,15 @@ exports.deleteComment = function(req, res){
         res.json({message: 'comment deleted'});
     });
 }
+
+exports.editComment = function(req, res){
+    var id = req.body.id;
+    model.findById(id, function(err, comment){
+        if (err) res.json({err:err, message:'sorry, an error occurred'});
+        if (req.body.commentBody) post.commentBody = req.body.commentBody;
+        comment.save(function (err, updatedComment){
+            if (err) res.json({err:err, message:'sorry an error occurred'});
+            res.json(updatedComment);
+        });
+    });
+}
